@@ -2,27 +2,26 @@ import subprocess
 import csv
 import time
 
-# 수집 횟수
+# Collect Count
 TOTAL_RUNS = 1000
-# 파일명
+# File Name
 output_file = "normal_hpc_data.csv"
 
-# HPC 지표 설정
+# Set HPC Metric
 events = "cycles,instructions,cache-misses,branch-misses"
 
-print(f"정상 데이터 수집 시작... {TOTAL_RUNS}회 실행 예정...")
+print(f"Normal Data Collect Start... {TOTAL_RUNS} Count...")
 
 with open(output_file, mode='w', newline='') as f:
     writer = csv.writer(f)
-    # 헤더는 [지표 이름 + 라벨] 으로 구성됨.
+    # [Metric Name + Label]
     writer.writerow(["cycles", "instructions", "cache_misses", "branch_misses", "label"])
 
     for i in range(1, TOTAL_RUNS + 1):
-        # perf stat 실행 csv 형태로 출력
+        # perf stat (csv)
         cmd = f"perf stat -e {events} -x, sleep 0.1 2>&1"
         result = subprocess.check_output(cmd, shell=True).decode('utf-8')
 
-        # 파싱
         rows = result.strip().split('\n')
         data = []
         for row in rows:
@@ -30,11 +29,10 @@ with open(output_file, mode='w', newline='') as f:
             if len(parts) > 0 and parts[0].isdigit():
                 data.append(parts[0])
 
-        # 지표가 모두 수집되었는지 확인 후 저장 (Label 0: Normal)
         if len(data) == 4:
             writer.writerow(data + ["0"])
             
         if i % 100 == 0:
-            print(f"{i}/{TOTAL_RUNS} 완료...")
+            print(f"{i}/{TOTAL_RUNS} Count...")
 
-print(f"수집끝 '{output_file}' 파일 생성")
+print(f"Finish.. '{output_file}' File Check...")
