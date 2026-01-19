@@ -2,19 +2,53 @@ import subprocess
 import csv
 import os
 import random
+import sys
 
+# ============================================
+# Configuration
+# ============================================
 TOTAL_RUNS = 1000
-OUTPUT_FILE = "faulty_hpc_data_gdb.csv"
-TARGET_APP = "./target_app"
 HPC_EVENTS = "cycles,instructions,cache-misses,branch-misses"
 
+# 벤치마크 선택 (명령줄 인자 또는 기본값)
+if len(sys.argv) > 1:
+    BENCHMARK = sys.argv[1]
+else:
+    BENCHMARK = "target"  # 기본값
+
+# 벤치마크별 설정
+BENCHMARKS = {
+    "basicmath": "./basicmath_bench",
+    "qsort": "./qsort_bench",
+    "sha": "./sha_bench",
+    "target": "./target_app"
+}
+
+if BENCHMARK not in BENCHMARKS:
+    print(f"Error: Unknown benchmark '{BENCHMARK}'")
+    print(f"Available: {', '.join(BENCHMARKS.keys())}")
+    sys.exit(1)
+
+TARGET_APP = BENCHMARKS[BENCHMARK]
+OUTPUT_FILE = f"data/faulty_{BENCHMARK}_gdb.csv"
 TARGET_REGISTERS = ["x0", "x1", "x2", "x3", "x4", "x5"]
 
 if not os.path.exists(TARGET_APP):
     print(f"Error: {TARGET_APP} not found.")
-    exit(1)
+    print("Please compile: make all")
+    sys.exit(1)
 
-print(f"Starting faulty data collection (Bit-Flip via GDB)... (Total: {TOTAL_RUNS} runs)")
+os.makedirs("data", exist_ok=True)
+
+print("=" * 60)
+print("GDB Fault Injection")
+print("=" * 60)
+print(f"Benchmark: {BENCHMARK}")
+print(f"Target: {TARGET_APP}")
+print(f"Total runs: {TOTAL_RUNS}")
+print(f"Output: {OUTPUT_FILE}")
+print("=" * 60)
+print()
 
 with open(OUTPUT_FILE, mode='w', newline='') as f:
     writer = csv.writer(f)
@@ -54,4 +88,7 @@ with open(OUTPUT_FILE, mode='w', newline='') as f:
         if i % 100 == 0:
             print(f"Progress: {i}/{TOTAL_RUNS} runs completed...")
 
-print(f"Success. Faulty data saved to '{OUTPUT_FILE}'.")
+print()
+print("=" * 60)
+print(f"✓ Success! Faulty data saved to '{OUTPUT_FILE}'")
+print("=" * 60)

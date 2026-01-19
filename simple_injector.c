@@ -11,11 +11,9 @@
  #include <sys/uio.h> 
  #include <unistd.h>
  #include <time.h>
- #include <linux/elf.h> // NT_PRSTATUS 정의를 위해 필요할 수 있음
+ #include <linux/elf.h>
  
- /* * ARM64의 레지스터 구조체를 직접 정의하여 사용합니다.
-  * <sys/user.h>와 충돌할 경우 이름을 'my_user_pt_regs'로 바꾸세요.
-  */
+
  struct user_pt_regs_arm64 {
      __u64 regs[31];
      __u64 sp;
@@ -25,7 +23,7 @@
  
  int main(int argc, char *argv[]) {
      pid_t target_pid;
-     struct user_pt_regs_arm64 regs; // 이름 변경
+     struct user_pt_regs_arm64 regs; 
      struct iovec iov;
      
      if (argc < 2) {
