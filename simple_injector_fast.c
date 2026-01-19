@@ -1,6 +1,6 @@
 /* 
- * simple_runner.c - Run program with ptrace (NO fault injection)
- * For collecting normal HPC data with same overhead as fault injection
+ * simple_injector_fast.c - Fast Fault Injector (NO SINGLESTEP)
+ * Uses sleep-based timing instead of instruction counting
  */
 
 #include <stdio.h>
@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    srand(time(NULL));
+    srand(time(NULL) ^ getpid());
 
     // Fork a child process
     target_pid = fork();
@@ -40,28 +40,37 @@ int main(int argc, char *argv[]) {
         // [Child Process]
         ptrace(PTRACE_TRACEME, 0, NULL, NULL);
         execl(argv[1], argv[1], NULL);
+        exit(1);
     } else {
         // [Parent Process]
         int status;
         
         // Wait for child start
         waitpid(target_pid, &status, 0);
-
-        // Skip same number of instructions (for consistency)
-        long instructions_to_skip = 10000 + (rand() % 50000);  // 10K~60K
-        for(int i=0; i < instructions_to_skip; i++) {
-             ptrace(PTRACE_SINGLESTEP, target_pid, 0, 0);
-             waitpid(target_pid, &status, 0);
-        }
-
-        // Read Registers (but don't modify)
+        
+        // Let program run for random microseconds (10-100ms)
+        usleep(10000 + (rand() % 90000));
+        
+        // Stop the child
+        ptrace(PTRACE_INTERRUPT, target_pid, 0, 0);
+        waitpid(target_pid, &status, 0);
+        
+        // Read Registers
         iov.iov_base = &regs;
         iov.iov_len = sizeof(regs);
         ptrace(PTRACE_GETREGSET, target_pid, NT_PRSTATUS, &iov);
 
-        // NO FAULT INJECTION - just continue
-        ptrace(PTRACE_CONT, target_pid, 0, 0);
+        // Inject Fault (random register)
+        int target_reg = rand() % 8;  // x0~x7
+        int target_bit = rand() % 64;
         
+        regs.regs[target_reg] ^= (1ULL << target_bit);
+
+        // Write back
+        ptrace(PTRACE_SETREGSET, target_pid, NT_PRSTATUS, &iov);
+
+        // Continue
+        ptrace(PTRACE_CONT, target_pid, 0, 0);
         waitpid(target_pid, &status, 0);
     }
     return 0;

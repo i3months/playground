@@ -47,8 +47,8 @@
          // Wait for child start
          waitpid(target_pid, &status, 0);
  
-         // Randomly skip instructions
-         long instructions_to_skip = rand() % 5000;
+         // Randomly skip instructions (더 깊숙이 들어가기)
+         long instructions_to_skip = 10000 + (rand() % 50000);  // 10K~60K
          for(int i=0; i < instructions_to_skip; i++) {
               ptrace(PTRACE_SINGLESTEP, target_pid, 0, 0);
               waitpid(target_pid, &status, 0);
@@ -59,8 +59,8 @@
          iov.iov_len = sizeof(regs);
          ptrace(PTRACE_GETREGSET, target_pid, NT_PRSTATUS, &iov);
  
-         // 3. Inject Fault (Bit-flip in x1)
-         int target_reg = 1; 
+         // 3. Inject Fault (랜덤 레지스터)
+         int target_reg = rand() % 8;  // x0~x7
          int target_bit = rand() % 64; 
          
          // printf("[Marvin] Flipping x%d bit %d\n", target_reg, target_bit);
