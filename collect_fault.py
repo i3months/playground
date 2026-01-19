@@ -4,7 +4,7 @@ import os
 import random
 
 TOTAL_RUNS = 1000
-OUTPUT_FILE = "faulty_hpc_data.csv"
+OUTPUT_FILE = "faulty_hpc_data_gdb.csv"
 TARGET_APP = "./target_app"
 HPC_EVENTS = "cycles,instructions,cache-misses,branch-misses"
 

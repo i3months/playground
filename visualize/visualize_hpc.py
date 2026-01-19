@@ -7,7 +7,7 @@ import os
 
 # 1. Configuration: File paths and metrics
 NORMAL_FILE = "target_normal_hpc_data.csv"
-FAULTY_FILE = "faulty_hpc_data.csv"
+FAULTY_FILE = "faulty_hpc_data_gdb.csv"
 METRICS = ["cycles", "instructions", "cache_misses", "branch_misses"]
 
 # 2. Load and merge datasets
