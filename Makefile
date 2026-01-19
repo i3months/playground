@@ -8,10 +8,11 @@ PYTHON = python3
 # Targets
 TARGET_APP = target_app
 BENCHMARKS = basicmath_bench qsort_bench sha_bench
+INJECTORS = simple_injector simple_runner
 
 .PHONY: all clean setup test run-example help
 
-all: $(TARGET_APP) $(BENCHMARKS)
+all: $(TARGET_APP) $(BENCHMARKS) $(INJECTORS)
 
 # Compile target application
 $(TARGET_APP): target_app.c
@@ -30,6 +31,15 @@ qsort_bench: example_benchmark.c
 sha_bench: example_benchmark.c
 	$(CC) $(CFLAGS) -DBENCHMARK=3 $< -o $@
 	@echo "✓ Compiled sha_bench"
+
+# Compile injectors
+simple_injector: simple_injector.c
+	$(CC) $(CFLAGS) $< -o $@
+	@echo "✓ Compiled simple_injector"
+
+simple_runner: simple_runner.c
+	$(CC) $(CFLAGS) $< -o $@
+	@echo "✓ Compiled simple_runner"
 
 # Setup environment
 setup:
@@ -81,7 +91,7 @@ visualize: collect-all
 
 # Clean build artifacts
 clean:
-	rm -f $(TARGET_APP) $(BENCHMARKS)
+	rm -f $(TARGET_APP) $(BENCHMARKS) $(INJECTORS)
 	rm -f *.o *.csv *.log
 	rm -f /tmp/gdb_inject.txt /tmp/gdb_inject_marvin.txt
 	rm -f visualize/*.png
