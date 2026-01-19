@@ -1,6 +1,4 @@
-# Marvin-style Fault Injection on Raspberry Pi 4
 
-## 빠른 시작
 
 ```bash
 ./setup_rpi_injector.sh
@@ -45,10 +43,3 @@ python3 collect_marvin_style.py target
 ```
 
 
-```bash
-make all           
-make test          
-make collect-all   
-make visualize     
-make clean         
-```
