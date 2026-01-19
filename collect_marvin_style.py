@@ -56,8 +56,11 @@ def inject_fault_gdb(target_reg, bit_pos):
     gdb_script = f"""
 set pagination off
 set confirm off
-break target_app.c:10
+break main
 run
+next
+next
+next
 set ${target_reg} = ${target_reg} ^ (1ULL << {bit_pos})
 continue
 quit

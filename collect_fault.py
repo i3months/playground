@@ -60,8 +60,11 @@ with open(OUTPUT_FILE, mode='w', newline='') as f:
         
         gdb_cmd = (
             f"gdb --batch "
-            f"-ex 'break target_app.c:10' "
+            f"-ex 'break main' "
             f"-ex 'run' "
+            f"-ex 'next' "
+            f"-ex 'next' "
+            f"-ex 'next' "
             f"-ex 'set ${reg} = ${reg} ^ (1ULL << {bit})' "
             f"-ex 'continue' "
             f"--args {TARGET_APP}"
