@@ -6,7 +6,7 @@ import sys
 # ============================================
 # Configuration
 # ============================================
-TOTAL_RUNS = 3000  # 적당한 개수
+TOTAL_RUNS = 3000  
 HPC_EVENTS = "cycles,instructions,cache-misses,branch-misses"
 
 if len(sys.argv) > 1:
