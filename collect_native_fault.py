@@ -1,24 +1,54 @@
 import subprocess
 import csv
 import os
-import time
+import sys
 
-# --- Configuration ---
+# ============================================
+# Configuration
+# ============================================
 TOTAL_RUNS = 1000
-OUTPUT_FILE = "faulty_hpc_native.csv"  # Native injector data
-INJECTOR = "./simple_injector"
-TARGET_APP = "./target_app"
-# Marvin Paper Targets
 HPC_EVENTS = "cycles,instructions,cache-misses,branch-misses"
+
+# 벤치마크 선택 (명령줄 인자 또는 기본값)
+if len(sys.argv) > 1:
+    BENCHMARK = sys.argv[1]
+else:
+    BENCHMARK = "basicmath"  # 기본값
+
+# 벤치마크별 설정
+BENCHMARKS = {
+    "basicmath": "./basicmath_bench",
+    "qsort": "./qsort_bench",
+    "sha": "./sha_bench",
+    "target": "./target_app"
+}
+
+if BENCHMARK not in BENCHMARKS:
+    print(f"Error: Unknown benchmark '{BENCHMARK}'")
+    print(f"Available: {', '.join(BENCHMARKS.keys())}")
+    sys.exit(1)
+
+TARGET_APP = BENCHMARKS[BENCHMARK]
+OUTPUT_FILE = f"data/faulty_{BENCHMARK}_native.csv"
+INJECTOR = "./simple_injector"
 
 # Check if binaries exist
 if not os.path.exists(INJECTOR) or not os.path.exists(TARGET_APP):
-    print("Error: 'simple_injector' or 'target_app' not found.")
-    print("Please compile them first using GCC.")
-    exit(1)
+    print(f"Error: '{INJECTOR}' or '{TARGET_APP}' not found.")
+    print("Please compile: make all")
+    sys.exit(1)
 
-print(f"Starting Native Fault Injection (Marvin Style)... (Total: {TOTAL_RUNS})")
-print(f"Output will be saved to: {OUTPUT_FILE}")
+os.makedirs("data", exist_ok=True)
+
+print("=" * 60)
+print("Native Fault Injection (ptrace)")
+print("=" * 60)
+print(f"Benchmark: {BENCHMARK}")
+print(f"Target: {TARGET_APP}")
+print(f"Total runs: {TOTAL_RUNS}")
+print(f"Output: {OUTPUT_FILE}")
+print("=" * 60)
+print()
 
 with open(OUTPUT_FILE, mode='w', newline='') as f:
     writer = csv.writer(f)
@@ -64,4 +94,7 @@ with open(OUTPUT_FILE, mode='w', newline='') as f:
         if i % 100 == 0:
             print(f"Progress: {i}/{TOTAL_RUNS} runs... (Collected: {success_count})")
 
-print(f"\nDone. Saved {success_count} valid samples to '{OUTPUT_FILE}'.")
+print()
+print("=" * 60)
+print(f"✓ Done! Saved {success_count} valid samples to '{OUTPUT_FILE}'")
+print("=" * 60)

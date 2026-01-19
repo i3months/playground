@@ -1,17 +1,51 @@
 import subprocess
 import csv
 import os
+import sys
 
+# ============================================
+# Configuration
+# ============================================
 TOTAL_RUNS = 1000
-OUTPUT_FILE = "target_normal_hpc_data.csv"
-TARGET_APP = "./target_app"
 HPC_EVENTS = "cycles,instructions,cache-misses,branch-misses"
 
-if not os.path.exists(TARGET_APP):
-    print(f"Error: {TARGET_APP} not found. Please compile the C code first.")
-    exit(1)
+# 벤치마크 선택 (명령줄 인자 또는 기본값)
+if len(sys.argv) > 1:
+    BENCHMARK = sys.argv[1]
+else:
+    BENCHMARK = "basicmath"  # 기본값
 
-print(f"Starting normal data collection for {TARGET_APP}... (Total: {TOTAL_RUNS} runs)")
+# 벤치마크별 설정
+BENCHMARKS = {
+    "basicmath": "./basicmath_bench",
+    "qsort": "./qsort_bench",
+    "sha": "./sha_bench",
+    "target": "./target_app"
+}
+
+if BENCHMARK not in BENCHMARKS:
+    print(f"Error: Unknown benchmark '{BENCHMARK}'")
+    print(f"Available: {', '.join(BENCHMARKS.keys())}")
+    sys.exit(1)
+
+TARGET_APP = BENCHMARKS[BENCHMARK]
+OUTPUT_FILE = f"data/normal_{BENCHMARK}.csv"
+
+if not os.path.exists(TARGET_APP):
+    print(f"Error: {TARGET_APP} not found. Please compile first: make all")
+    sys.exit(1)
+
+os.makedirs("data", exist_ok=True)
+
+print("=" * 60)
+print(f"Normal Data Collection")
+print("=" * 60)
+print(f"Benchmark: {BENCHMARK}")
+print(f"Target: {TARGET_APP}")
+print(f"Total runs: {TOTAL_RUNS}")
+print(f"Output: {OUTPUT_FILE}")
+print("=" * 60)
+print()
 
 with open(OUTPUT_FILE, mode='w', newline='') as f:
     writer = csv.writer(f)
@@ -39,4 +73,7 @@ with open(OUTPUT_FILE, mode='w', newline='') as f:
         if i % 100 == 0:
             print(f"Progress: {i}/{TOTAL_RUNS} runs completed...")
 
-print(f"Success. Data saved to '{OUTPUT_FILE}'.")
+print()
+print("=" * 60)
+print(f"✓ Success! Data saved to '{OUTPUT_FILE}'")
+print("=" * 60)
