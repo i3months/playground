@@ -1,21 +1,14 @@
-import subprocess
-import csv
-import os
-import sys
-
 # ============================================
 # Configuration
 # ============================================
-TOTAL_RUNS = 1000
+TOTAL_RUNS = 7000  
 HPC_EVENTS = "cycles,instructions,cache-misses,branch-misses"
 
-# 벤치마크 선택 (명령줄 인자 또는 기본값)
 if len(sys.argv) > 1:
     BENCHMARK = sys.argv[1]
 else:
-    BENCHMARK = "basicmath"  # 기본값
+    BENCHMARK = "basicmath"
 
-# 벤치마크별 설정
 BENCHMARKS = {
     "basicmath": "./basicmath_bench",
     "qsort": "./qsort_bench",
@@ -81,7 +74,7 @@ with open(OUTPUT_FILE, mode='w', newline='') as f:
 
             # Only save if we captured all 4 metrics
             if len(data_row) == 4:
-                writer.writerow(data_row + ["1"]) # Label 1 for Fault
+                writer.writerow(data_row + ["3"])  # label=3: ptrace native
                 success_count += 1
             
         except subprocess.CalledProcessError:

@@ -1,22 +1,14 @@
-import subprocess
-import csv
-import os
-import random
-import sys
-
 # ============================================
 # Configuration
 # ============================================
-TOTAL_RUNS = 1000
+TOTAL_RUNS = 7000 
 HPC_EVENTS = "cycles,instructions,cache-misses,branch-misses"
 
-# 벤치마크 선택 (명령줄 인자 또는 기본값)
 if len(sys.argv) > 1:
     BENCHMARK = sys.argv[1]
 else:
-    BENCHMARK = "target"  # 기본값
+    BENCHMARK = "target" 
 
-# 벤치마크별 설정
 BENCHMARKS = {
     "basicmath": "./basicmath_bench",
     "qsort": "./qsort_bench",
@@ -83,7 +75,7 @@ with open(OUTPUT_FILE, mode='w', newline='') as f:
                     data.append(parts[0])
 
             if len(data) == 4:
-                writer.writerow(data + ["1"])
+                writer.writerow(data + ["2"])  
             
         except subprocess.CalledProcessError as e:
             print(f"Run {i}: Program crashed or error occurred due to fault injection.")

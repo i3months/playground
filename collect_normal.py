@@ -6,16 +6,14 @@ import sys
 # ============================================
 # Configuration
 # ============================================
-TOTAL_RUNS = 1000
+TOTAL_RUNS = 7000  # 정상 데이터 넉넉하게
 HPC_EVENTS = "cycles,instructions,cache-misses,branch-misses"
 
-# 벤치마크 선택 (명령줄 인자 또는 기본값)
 if len(sys.argv) > 1:
     BENCHMARK = sys.argv[1]
 else:
-    BENCHMARK = "basicmath"  # 기본값
+    BENCHMARK = "basicmath"
 
-# 벤치마크별 설정
 BENCHMARKS = {
     "basicmath": "./basicmath_bench",
     "qsort": "./qsort_bench",

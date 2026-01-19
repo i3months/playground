@@ -8,17 +8,15 @@ from pathlib import Path
 # ============================================
 # Configuration (Marvin-style)
 # ============================================
-TOTAL_FAULTS = 1000  # Number of different faults
-NUM_RUNS_PER_FAULT = 7  # Marvin's num_of_run
+TOTAL_FAULTS = 7000  
+NUM_RUNS_PER_FAULT = 1 
 HPC_EVENTS = "cycles,instructions,cache-misses,branch-misses"
 
-# 벤치마크 선택 (명령줄 인자 또는 기본값)
 if len(sys.argv) > 1:
     BENCHMARK = sys.argv[1]
 else:
-    BENCHMARK = "basicmath"  # 기본값
+    BENCHMARK = "basicmath" 
 
-# 벤치마크별 설정
 BENCHMARKS = {
     "basicmath": "./basicmath_bench",
     "qsort": "./qsort_bench",
@@ -177,7 +175,7 @@ def main():
         
         # Write HPC data to CSV (compatible with existing format)
         for hpc_data in hpc_samples:
-            # label=1 for faulty data (compatible with existing code)
+            # label=1: Marvin GDB method
             writer.writerow(hpc_data + [1])
             success_count += 1
         
