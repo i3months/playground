@@ -1,7 +1,7 @@
 # ============================================
 # Configuration
 # ============================================
-TOTAL_RUNS = 7000 
+TOTAL_RUNS = 3000  # 적당한 개수 (약 30분) 
 HPC_EVENTS = "cycles,instructions,cache-misses,branch-misses"
 
 if len(sys.argv) > 1:

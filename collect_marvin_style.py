@@ -8,7 +8,7 @@ from pathlib import Path
 # ============================================
 # Configuration (Marvin-style)
 # ============================================
-TOTAL_FAULTS = 7000  
+TOTAL_FAULTS = 3000  # 적당한 개수 (약 30분)  
 NUM_RUNS_PER_FAULT = 1 
 HPC_EVENTS = "cycles,instructions,cache-misses,branch-misses"
 
