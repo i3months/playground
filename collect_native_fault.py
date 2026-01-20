@@ -28,7 +28,7 @@ if BENCHMARK not in BENCHMARKS:
 
 TARGET_APP = BENCHMARKS[BENCHMARK]
 OUTPUT_FILE = f"data/faulty_{BENCHMARK}_native.csv"
-INJECTOR = "./simple_injector"
+INJECTOR = "./simple_injector_fast"  # Fast version!
 
 # Check if binaries exist
 if not os.path.exists(INJECTOR) or not os.path.exists(TARGET_APP):

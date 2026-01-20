@@ -28,7 +28,7 @@ if BENCHMARK not in BENCHMARKS:
 
 TARGET_APP = BENCHMARKS[BENCHMARK]
 OUTPUT_FILE = f"data/ptrace_normal_{BENCHMARK}.csv"
-RUNNER = "./simple_runner"
+RUNNER = "./simple_runner_fast"  # Fast version!
 
 # Check if binaries exist
 if not os.path.exists(RUNNER) or not os.path.exists(TARGET_APP):

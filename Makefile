@@ -8,7 +8,7 @@ PYTHON = python3
 # Targets
 TARGET_APP = target_app
 BENCHMARKS = basicmath_bench qsort_bench sha_bench
-INJECTORS = simple_injector simple_runner
+INJECTORS = simple_injector simple_runner simple_injector_fast simple_runner_fast
 
 .PHONY: all clean setup test run-example help
 
@@ -40,6 +40,14 @@ simple_injector: simple_injector.c
 simple_runner: simple_runner.c
 	$(CC) $(CFLAGS) $< -o $@
 	@echo "✓ Compiled simple_runner"
+
+simple_injector_fast: simple_injector_fast.c
+	$(CC) $(CFLAGS) $< -o $@
+	@echo "✓ Compiled simple_injector_fast"
+
+simple_runner_fast: simple_runner_fast.c
+	$(CC) $(CFLAGS) $< -o $@
+	@echo "✓ Compiled simple_runner_fast"
 
 # Setup environment
 setup:
